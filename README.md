@@ -19,6 +19,7 @@ Right now this project is just an idea, but it's a nice one and I hope that I on
 * use the simplest tools available, so it remains possible to do things manually where desired
 * package specification in yaml format
 * test installation with unionfs
+* verify system integrity with backed up checksums
 
 ### Dependency resolution
 I don't plan on doing any. It would however be convenient to list dependencies, so search would be more useful (e.g. I upgraded a package and need to know what to recompile), but it is unlikely that I would be able to invest enough time to list all dependencies for every package, and half a feature may be more harmful than no feature at all. Although this is information we might be able to copy from other package managers. I am undecided about this.
@@ -33,11 +34,18 @@ I don't plan on adding package signing or signature verification. I have two goo
 * [user-based package management from Linux from scratch](http://www.linuxfromscratch.org/hints/downloads/files/more_control_and_pkg_man.txt)
 * [rollback with unionfs from Linux from scratch](http://www.linuxfromscratch.org/hints/downloads/files/package_management_using_trip.txt)
 * Slackware package management (slackbuilds, slackpkg{,+}, sbopkg)
+* [security for Linux from scratch](http://www.linuxfromscratch.org/hints/downloads/files/security.txt)
 * guix
 
 ## Interface
 ### System
-Ensure correct permissions on installation directories. Maybe some options for bootstrapping an installation? If we do decide tracking dependencies, we could do a system integrity check that reports packages being compiled with different versions of their dependencies than are currently installed.
+Ensure correct permissions on installation directories.
+
+Maybe some options for bootstrapping an installation?
+
+If we do decide tracking dependencies, we could do a system integrity check that reports packages being compiled with different versions of their dependencies than are currently installed.
+
+Can also verify files with a snapshot of checksums.
 
 ### Repository
 Managing the repository. It is kept in version control, and this can be as simple as doing a pull command. Ideally it would be possible to use multiple repositories, and pick and choose, but that is something for future versions.
@@ -82,6 +90,9 @@ Remove all files owned by package user except those in the package user's home d
 ### Remove
 This option removes anything and everything from this package, including the source directories and the user.
 
+### Snapshot
+Record checksums of all package files in directories were no changes should occur (anything not in /home, /var or /etc) for the user to backup on a separate location.
+
 ## Package specification
 Some preliminary ideas about package specification:
 
@@ -106,7 +117,7 @@ build:
 test:
   - make tests
 pre_install:
-  - "sed 's/rm -rf \/$//' awesome_script > awesome_script"
+  - "sed 's/rm -rf \\/$//' awesome_script > awesome_script"
 install:
   - make install
 post_install:
