@@ -18,6 +18,7 @@ Right now this project is just an idea, but it's a nice one and I hope that I on
 * fine-grained control over the build process
 * use the simplest tools available, so it remains possible to do things manually where desired
 * package specification in yaml format
+* test installation with unionfs
 
 ### Dependency resolution
 I don't plan on doing any. It would however be convenient to list dependencies, so search would be more useful (e.g. I upgraded a package and need to know what to recompile), but it is unlikely that I would be able to invest enough time to list all dependencies for every package, and half a feature may be more harmful than no feature at all. Although this is information we might be able to copy from other package managers. I am undecided about this.
@@ -30,6 +31,7 @@ I don't plan on adding package signing or signature verification. I have two goo
 
 ## Inspiration (in order of importance)
 * [user-based package management from Linux from scratch](http://www.linuxfromscratch.org/hints/downloads/files/more_control_and_pkg_man.txt)
+* [rollback with unionfs from Linux from scratch](http://www.linuxfromscratch.org/hints/downloads/files/package_management_using_trip.txt)
 * Slackware package management (slackbuilds, slackpkg{,+}, sbopkg)
 * guix
 
@@ -61,10 +63,15 @@ Run configuration if this package includes that step.
 ### Build
 Run configure first if the environment or specification has changed since last execution. Run compilation if this package includes that step.
 
-### Install
-Run build first if the environment or specification has changed since the last execution.
+### Test
+Run build first if environment or specification has changed since last execution. Run test if this package includes that step. Report result back to user and offer them the chance to abort. This stage can be skipped with a command line option.
 
-Package installation. If a version of this package is already present in the system, it is uninstalled first, unless the package specification indicates this is a multi-versioned package. After installation the user is prompted about possible overwrites in the /etc directory which is kept in version control. Logs are then scanned for possible problems with the user package management, and the user is informed about them.
+### Install
+Run build/test first if the environment or specification has changed since the last execution.
+
+Package installation. Do a test installation first. Logs are then scanned for possible problems with the user package management, and the user is informed about them and asked for confirmation before going ahead with the actual installation.
+
+If a version of this package is already present in the system, it is uninstalled first. After installation the user is prompted about possible overwrites in the /etc directory which is kept in version control.
 
 ### Uninstall
 Run uninstall if the package specifies one. Not all packages include a uninstallation option, in that case the user can use purge.
@@ -74,3 +81,43 @@ Remove all files owned by package user except those in the package user's home d
 
 ### Remove
 This option removes anything and everything from this package, including the source directories and the user.
+
+## Package specification
+Some preliminary ideas about package specification:
+
+```yaml
+name: the_perfect_package
+version: 100.5.a1
+download_link: http://example.com/the_perfect_package-100.5.a1.tar.gz
+checksum: not_a_real_checksum
+env:
+  - 'MY_VARIABLE="very important"'
+  - LOCALE=en.UTF-8
+configure_env:
+  - DEST=/usr
+pre_configure:
+  - "sed 's/tools/usr/' /tools/lib/libstdc++.la > /usr/lib/libstdc++.la"
+configure:
+  - "./configure"
+build_env:
+  - LC_COLLATE=C
+build:
+  - make
+test:
+  - make tests
+pre_install:
+  - "sed 's/rm -rf \/$//' awesome_script > awesome_script"
+install:
+  - make install
+post_install:
+  - ln -s /usr/the_perfect_package/awesome_script /usr/bin/.
+uninstall:
+  - make uninstall
+description: |
+  This is the most awesome package ever. No really, we're really trustworthy.
+  We will never mess up your system or leave vulnerable binaries with setuid root
+  on your system. Promise. You don't even need to check that. No really, don't.
+```
+
+## Global configuration
+A global configuration file is available with the option to include environment variables that are used for every package, but also options with default paths, options for user creation and test installation file systems.
