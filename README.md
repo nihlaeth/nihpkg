@@ -18,7 +18,7 @@ Right now this project is just an idea, but it's a nice one and I hope that I on
 * fine-grained control over the build process
 * use the simplest tools available, so it remains possible to do things manually where desired
 * package specification in yaml format
-* test installation with unionfs
+* test installation with overlayfs
 * verify system integrity with backed up checksums
 
 ### Dependency resolution
