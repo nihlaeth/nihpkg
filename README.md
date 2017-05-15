@@ -19,6 +19,9 @@ Right now this project is just an idea, but it's a nice one and I hope that I on
 * use the simplest tools available, so it remains possible to do things manually where desired
 * package specification in yaml format
 
+### Dependency resolution
+I don't plan on doing any. It would however be convenient to list dependencies, so search would be more useful (e.g. I upgraded a package and need to know what to recompile), but it is unlikely that I would be able to invest enough time to list all dependencies for every package, and half a feature may be more harmful than no feature at all. Although this is information we might be able to copy from other package managers. I am undecided about this.
+
 ## Inspiration (in order of importance)
 * [user-based package management from Linux from scratch](http://www.linuxfromscratch.org/hints/downloads/files/more_control_and_pkg_man.txt)
 * Slackware package management (slackbuilds, slackpkg{,+}, sbopkg)
@@ -26,7 +29,7 @@ Right now this project is just an idea, but it's a nice one and I hope that I on
 
 ## Interface
 ### System
-Ensure correct permissions on installation directories. Maybe some options for bootstrapping an installation?
+Ensure correct permissions on installation directories. Maybe some options for bootstrapping an installation? If we do decide tracking dependencies, we could do a system integrity check that reports packages being compiled with different versions of their dependencies than are currently installed.
 
 ### Repository
 Managing the repository. It is kept in version control, and this can be as simple as doing a pull command. Ideally it would be possible to use multiple repositories, and pick and choose, but that is something for future versions.
