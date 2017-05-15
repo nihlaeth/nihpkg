@@ -5,16 +5,16 @@ Right now this project is just an idea, but it's a nice one and I hope that I on
 
 ## Features
 * thorough documentation of the build process
-** configuration, build and installation logs are kept
-** a record is made of the system and environment states during each step, enabling things like listing all packages built with an older version of glibc
+  * configuration, build and installation logs are kept
+  * a record is made of the system and environment states during each step, enabling things like listing all packages built with an older version of glibc
 * few dependencies so it can be used early in the LFS build process
-** yaml-cpp
-** argparse
+  * yaml-cpp
+  * argparse
 * supports fake root so it can also be used before chroot in the LFS build process
 * creates a user for each package and compiles and installs as that user
-** no files can get accidentally (or maliciously) overwritten
-** limit use of setuid by packages
-** easily see to which package a certain file belongs
+  * no files can get accidentally (or maliciously) overwritten
+  * limit use of setuid by packages
+  * easily see to which package a certain file belongs
 * fine-grained control over the build process
 * use the simplest tools available, so it remains possible to do things manually where desired
 * package specification in yaml format
