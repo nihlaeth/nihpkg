@@ -22,6 +22,12 @@ Right now this project is just an idea, but it's a nice one and I hope that I on
 ### Dependency resolution
 I don't plan on doing any. It would however be convenient to list dependencies, so search would be more useful (e.g. I upgraded a package and need to know what to recompile), but it is unlikely that I would be able to invest enough time to list all dependencies for every package, and half a feature may be more harmful than no feature at all. Although this is information we might be able to copy from other package managers. I am undecided about this.
 
+### Trust
+I don't plan on adding package signing or signature verification. I have two good reasons for this.
+
+1. We won't be providing archives with the actual source code, nor will we provide binaries.
+2. I expect an LFS user to at least inspect the package specification and the commands that it will execute. To encourage this, and to make it easier, I will do my best to make this a readable format with only a moderate amount of code in it.
+
 ## Inspiration (in order of importance)
 * [user-based package management from Linux from scratch](http://www.linuxfromscratch.org/hints/downloads/files/more_control_and_pkg_man.txt)
 * Slackware package management (slackbuilds, slackpkg{,+}, sbopkg)
@@ -47,7 +53,7 @@ Search both repository and installed packages. Should incorporate advanced filte
 Create necessary user, group and user directories.
 
 ### Get
-Create directory structure for specific version of package, and download or copy source archive. In the future and this would also support installing from version control.
+Create directory structure for specific version of package, and download or copy source archive. In the future this would also support installing from version control. Should be able to verify checksums.
 
 ### Configure
 Run configuration if this package includes that step.
